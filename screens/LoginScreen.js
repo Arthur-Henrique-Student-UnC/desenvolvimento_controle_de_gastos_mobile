@@ -1,106 +1,107 @@
-import { SafeAreaView, Text, StyleSheet } from "react-native";
-import { auth, signOut, db } from '../firebase.js';
-import { DangerButton, PrimaryButton } from "../components/Buttons";
-import { CustomTextInput } from "../components/CustomInputs";
-import { useState, useEffect } from "react";
-import { collection, addDoc, getDocs, query, where } from "../firebase/firestore";
-import { onAuthStateChanged } from "../firebase/auth";
+import { useEffect, useState } from 'react';
+import {
+    SafeAreaView,
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity
+} from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import {
+    auth,
+    signInWithEmailAndPassword
+} from '../firebase';
+import { PrimaryButton, SecondaryButton } from '../components/Button.js';
+import { EmailInput, PasswordInput } from '../components/CustomInput.js';
 
-export default function HomeScreen () {
+export default function LoginScreen () {
 
-    const [user, setUser] = useState(null);
+    const navigation = useNavigation();
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-        });
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-        return unsubscribe;
-    }, []);
+    const [ email, setEmail ] = useState('');
+    const [ password, setPassword ] = useState('');
 
-    const logout = async () => {
-        await signOut(auth);
-    }
+    const [ errorMessage, setErrorMessage ] = useState('');
 
-    const [text, setText] = useState('');
-    const [list, setList] = useState([]);
-
-    const loadRecords = async () => {
-        const snapshot = await getDocs(
-            query(
-                collection(db, 'records'),
-                where('user_id', '==', user.uid)
-            )
-        );
-        const records = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-        setList(records);
-
-        console.log(records);
-    }
-
-    useEffect(() => {
-        if (!user) {
-            return;
-        }
-        loadRecords();
-    }, [user]);
-
-    const add = async () => {
-        console.log(user.uid);
-
-        if (!text) {
-            console.log('preencha o campo.');
+    const login = async () => {
+        if (!email || !password) {
+            setErrorMessage('Informe o e-mail e senha.');
             return;
         }
 
-        await addDoc(collection(db, 'records'), {
-            text: text,
-            user_id: user.uid
-        });
+        if (!regexEmail.test(email)) {
+            setErrorMessage('E-mail inválido');
+            return;
+        }
 
-        loadRecords();
+        if (!regexPassword.test(password)) {
+            setErrorMessage('A senha deve conter no mínimo 8 caracteres, letra maiúscula, minúscula, número e símbolo');
+            return;
+        }
 
-        setText('');
+        setErrorMessage('');
+
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+            const user = userCredentials.user;
+            console.log(user);
+        })
+        .catch((error) => {
+            setErrorMessage(error.message);
+        })
     }
- 
+
+    useEffect(() => {
+        setErrorMessage('');
+    }, [email, password])
+
     return (
-        <SafeAreaView style={{ margin: 20 }}>
-            <Text style={styles.title} >TO DO LIST</Text>
-            <DangerButton text={'Desconectar'} action={logout} />
+        <SafeAreaView>
+            <View style={styles.container}>
+                <Text style={styles.title}>Entrar</Text>
+                <EmailInput value={email} setValue={setEmail} />
 
-            <CustomTextInput placeholder={'Digite o texto...'} value={text} setValue={setText} />
+                <PasswordInput value={password} setValue={setPassword} />
+                
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.push('ForgotPassword');
+                    }}
+                >
+                    <Text>Esqueci a senha</Text>
+                </TouchableOpacity>
+                {errorMessage &&
+                    <Text style={styles.errorMessage}>{errorMessage}</Text>
+                }
+                <PrimaryButton text={'Login'} action={() => {
+                    login();
+                }} />
 
-            <PrimaryButton text="Adicionar Registro" action={() => {
-                add();
-            }} />
+                <Text>Ainda não tem uma conta?</Text>
 
-            {list.map((item) => (
-                <Text key={item.id}>{item.text}</Text>
-            ))}
+                <SecondaryButton text={'Registrar-se'} action={() => {
+                    navigation.push('Register');
+                }} />
+            </View>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        margin: 25
+    },
     title: {
+        fontSize: 45,
         textAlign: 'center',
-        fontSize: 30,
-        margin: 40
+        marginVertical: 40
     },
-    logoutButton: {
-        backgroundColor: 'red',
-        padding: 15,
-        margin: 30,
-        borderRadius: 15
-    },
-    logoutButtonText: {
+    errorMessage: {
+        fontSize: 18,
         textAlign: 'center',
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
+        color: 'red'
     }
 })

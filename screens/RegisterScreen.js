@@ -9,9 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import {
     auth,
     createUserWithEmailAndPassword
-} from '../firebase.js';
-import { PrimaryButton, SecondaryButton } from '../components/Buttons';
-import { EmailInput, PasswordInput } from '../components/CustomInputs';
+} from '../firebase';
+import { PrimaryButton, SecondaryButton } from '../components/Button.js';
+import { EmailInput, PasswordInput } from '../components/CustomInput.js';
 
 export default function RegisterScreen () {
 
