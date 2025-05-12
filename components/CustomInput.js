@@ -1,7 +1,7 @@
 
 import { TextInput, StyleSheet } from "react-native";
 
-export function EmailInput ({ placeholder = "E-mail", value, setValue }) {
+export function EmailInput ({ placeholder = "E-mail", valor, setValor }) {
     return (
         <TextInput
             placeholder={placeholder}
@@ -9,13 +9,13 @@ export function EmailInput ({ placeholder = "E-mail", value, setValue }) {
             style={styles.input}
             inputMode="email"
             autoCapitalize="none"
-            onChangeText={setValue}
-            value={value}
+            onChangeText={setValor}
+            value={valor}
         />
     )
 }
 
-export function PasswordInput ({ placeholder = "Senha", value, setValue }) {
+export function PasswordInput ({ placeholder = "Senha", valor, setValor }) {
     return (
         <TextInput
             placeholder={placeholder}
@@ -23,20 +23,20 @@ export function PasswordInput ({ placeholder = "Senha", value, setValue }) {
             style={styles.input}
             autoCapitalize="none"
             secureTextEntry={true}
-            onChangeText={setValue}
-            value={value}
+            onChangeText={setValor}
+            value={valor}
         />
     )
 }
 
-export function CustomTextInput ({ placeholder, value, setValue }) {
+export function CustomTextInput ({ placeholder, valor, setValor }) {
     return (
         <TextInput
             placeholder={placeholder}
             placeholderTextColor="black"
             style={styles.input}
-            onChangeText={setValue}
-            value={value}
+            onChangeText={setValor}
+            value={valor}
         />
     )
 }
