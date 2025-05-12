@@ -89,13 +89,12 @@ useEffect(() => {
   console.log("Loaded expenses:", gastos);
 }, [gastos]);
 
-    //This part will load the records when the user changes.
-    // useEffect(() => {
-    //     if (!user) {
-    //         return;
-    //     }
-    //     carregarGastos();
-    // }, [user]);
+useEffect(() => {
+    if (!user) {
+          return;
+        }
+    carregarGastos();
+    }, [user]);
 
     //This part is responsible to add documents, or records, to Firebase's database.
 
@@ -151,6 +150,10 @@ useEffect(() => {
     data: Timestamp.now(),       // Better timestamp method
     user_id: user.uid
   });
+
+  await carregarGastos();
+  setDescricao('');
+  setValor('');
 };
 
 const atualizarGasto = async () => {
@@ -196,22 +199,21 @@ return (
           <View style={styles.formContainer}>
             <CustomTextInput
               placeholder="Descrição do gasto"
-              value={descricao}
-              onChangeText={setDescricao}
+              valor={descricao}
+              setValor={setDescricao}
               style={styles.input}
             />
 
             <CustomTextInput
               placeholder="Valor (ex: 10.50)"
-              value={valor}
-              onChangeText={setValor}
-              keyboardType="numeric"
+              valor={valor}
+              setValor={setValor}
               style={styles.input}
             />
 
             <PrimaryButton
               text={editingId ? "Atualizar Gasto" : "Adicionar Gasto"}
-              onPress={editingId ? atualizarGasto : adicionarGasto}
+              action={editingId ? atualizarGasto : adicionarGasto}
               style={styles.addButton}
             />
           </View>
@@ -231,7 +233,7 @@ return (
                   <View style={styles.expenseActions}>
                     <PrimaryButton
                       text="Editar"
-                      onPress={() => {
+                      action={() => {
                         setEditingId(gasto.id);
                         setDescricao(gasto.descricao);
                         setValor(gasto.valor.toString());
@@ -241,7 +243,7 @@ return (
                     />
                     <DangerButton
                       text="Excluir"
-                      onPress={() => excluirGasto(gasto.id)}
+                      action={() => excluirGasto(gasto.id)}
                       style={styles.actionButton}
                     />
                   </View>
