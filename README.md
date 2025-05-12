@@ -92,6 +92,6 @@ Um aplicativo CRUD completo criado com React Native e Firebase Firestore para co
 
 ## Licença MIT - Gratuita para uso pessoal e comercial
 
-Made with ❤️ by [ArthurRibeiroHenrique] | [github.com/ArthurRibeiroHenrique](github.com/ArthurRibeiroHenrique)
+Made with ❤️ by [ArthurRibeiroHenrique] | [github.com/ArthurRibeiroHenrique]
 
 
