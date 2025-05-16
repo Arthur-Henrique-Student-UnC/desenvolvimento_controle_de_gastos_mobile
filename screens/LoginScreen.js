@@ -62,9 +62,9 @@ export default function LoginScreen () {
         <SafeAreaView>
             <View style={styles.container}>
                 <Text style={styles.title}>Entrar</Text>
-                <EmailInput value={email} setValue={setEmail} />
+                <EmailInput valor={email} setValor={setEmail} />
 
-                <PasswordInput value={password} setValue={setPassword} />
+                <PasswordInput valor={password} setValor={setPassword} />
                 
                 <TouchableOpacity
                     onPress={() => {
