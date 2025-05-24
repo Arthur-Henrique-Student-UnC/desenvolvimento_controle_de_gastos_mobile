@@ -62,12 +62,12 @@ export default function RegisterScreen () {
         <SafeAreaView>
             <View style={styles.container}>
                 <Text style={styles.title}>Registrar-se</Text>
-                <EmailInput value={email} setValue={setEmail} />
+                <EmailInput value={email} setValor={setEmail} />
 
-                <EmailInput value={email} setValue={setEmail} />
+                <EmailInput value={email} setValor={setEmail} />
 
                 
-                <PasswordInput value={password} setValue={setPassword} />
+                <PasswordInput value={password} setValor={setPassword} />
                 {errorMessage &&
                     <Text style={styles.errorMessage}>{errorMessage}</Text>
                 }
